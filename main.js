@@ -40,28 +40,32 @@ var apod = {
           $("#apodDesc").text(result.explanation);
     },
 
+    getRequest: function(){
+      let date = this.randomDate(new Date(1995, 5, 16), new Date());
+      //let date = this.randomDate( new Date(), new Date() );
+      var url = "https://api.nasa.gov/planetary/apod?api_key=";
+      var nasaKey = "TUnEr2TBPZYgea1CdKbuBxj1lRdBdsRQKoQEGlke";
+      var that = this;
+
+      $.ajax({
+          url: url + nasaKey + '&date=' + date
+      }).done(function(result){
+        
+        that.buildDOM(result);
+        
+      }).fail(function(result){
+        console.log(result);
+      });
+    },
+
     // Application Constructor
     init: function() {
-        let date = this.randomDate(new Date(1995, 5, 16), new Date());
-        //let date = this.randomDate( new Date(), new Date() );
-        var url = "https://api.nasa.gov/planetary/apod?api_key=";
-        var nasaKey = "TUnEr2TBPZYgea1CdKbuBxj1lRdBdsRQKoQEGlke";
-        var that = this;
-
-        $.ajax({
-            url: url + nasaKey + '&date=' + date
-        }).done(function(result){
-          
-          that.buildDOM(result);
-          
-        }).fail(function(result){
-          console.log(result);
-        });
+       this.getRequest();
     }
 };
 
 apod.init();
 
 $('#randBtn').on('click', function(){
-  apod.init();
+  apod.getRequest();
 })
