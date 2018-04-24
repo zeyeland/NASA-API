@@ -1,3 +1,4 @@
+
 var apod = {
     //Create a random date
     randomDate: function(start, end) {
@@ -22,19 +23,8 @@ var apod = {
       return y + '-' + m + '-' + d;
     },
 
-    // Application Constructor
-    init: function() {
-        //let date = this.randomDate(new Date(1995, 5, 16), new Date());
-        let date = this.randomDate( new Date(), new Date() );
-        var url = "https://api.nasa.gov/planetary/apod?api_key=";
-        var nasaKey = "TUnEr2TBPZYgea1CdKbuBxj1lRdBdsRQKoQEGlke";
-        
-
-        $.ajax({
-            url: url + nasaKey + '&date=' + date
-        }).done(function(result){
-          
-          $('#apodTitle').text(result.title);
+    buildDOM: function(result){
+      $('#apodTitle').text(result.title);
 
           if(result.media_type === 'video'){
             $("#apodImg").hide();
@@ -48,6 +38,22 @@ var apod = {
           $("#apodCopyright").text("Copyright: " + result.copyright);
           $("#apodDate").text("Date: " + result.date);
           $("#apodDesc").text(result.explanation);
+    },
+
+    // Application Constructor
+    init: function() {
+        let date = this.randomDate(new Date(1995, 5, 16), new Date());
+        //let date = this.randomDate( new Date(), new Date() );
+        var url = "https://api.nasa.gov/planetary/apod?api_key=";
+        var nasaKey = "TUnEr2TBPZYgea1CdKbuBxj1lRdBdsRQKoQEGlke";
+        var that = this;
+
+        $.ajax({
+            url: url + nasaKey + '&date=' + date
+        }).done(function(result){
+          
+          that.buildDOM(result);
+          
         }).fail(function(result){
           console.log(result);
         });
@@ -55,3 +61,7 @@ var apod = {
 };
 
 apod.init();
+
+$('#randBtn').on('click', function(){
+  apod.init();
+})
